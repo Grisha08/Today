@@ -6,3 +6,15 @@
 //
 
 import Foundation
+
+
+class ToDo : Codable {
+    var title : String = ""
+  var done : Bool = false
+    
+}
+
+
+
+
+
