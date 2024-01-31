@@ -12,11 +12,16 @@ class ToDoList: UITableViewController  {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var searchBar: UISearchBar!
     
+    var selectedCategory : Category?{
+        didSet{
+            loadItems()
+        }
+    }
     override func viewDidLoad() {
      super.viewDidLoad()
         
         searchBar.delegate = self
-        loadItems()
+       
     }
     func saveData(){
           do{
@@ -58,7 +63,7 @@ class ToDoList: UITableViewController  {
             let newItem = ToDo(context: self.context)
             newItem.done = false
             newItem.title = textField.text!
-            
+            newItem.parentCategory = self.selectedCategory
             self.itemArray.append(newItem)
             self.saveData()
         }
@@ -76,7 +81,18 @@ class ToDoList: UITableViewController  {
        return  itemArray.count // get how many rows we have
     }
         
-    func loadItems(with request : NSFetchRequest<ToDo> = ToDo.fetchRequest()){
+    func loadItems(with request : NSFetchRequest<ToDo> = ToDo.fetchRequest(), predicate: NSPredicate? = nil ){
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@" , selectedCategory!.name!)
+        
+        if let addtionalPredicate = predicate{
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate,addtionalPredicate])
+        }else{
+            request.predicate = categoryPredicate
+        }
+        
+
+        
         do{
             //try to get array of ToDo
             //data from context and type is from request
@@ -93,12 +109,13 @@ extension ToDoList :  UISearchBarDelegate{
        
         let request = ToDo.fetchRequest()
         
-        request.predicate = NSPredicate(format:"title CONTAINS[cd] %@" ,searchBar.text! )
+      let predicate = NSPredicate(format:"title CONTAINS[cd] %@" ,searchBar.text! )
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-      loadItems(with: request)
+      loadItems(with: request,predicate: predicate)
 
     }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadItems()
