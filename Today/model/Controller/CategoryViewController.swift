@@ -39,8 +39,10 @@ class CategoryViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
        performSegue(withIdentifier: "goToItems", sender: self)
-       // context.delete(categoryArray[indexPath.row])
-       // categoryArray.remove(at: indexPath.row)
+    
+//        context.delete(categoryArray[indexPath.row])
+//      categoryArray.remove(at: indexPath.row)
+//        saveData()
         
         //make beutiful animation
         tableView.deselectRow(at: indexPath, animated: true )

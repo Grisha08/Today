@@ -17,6 +17,7 @@ class ToDoList: UITableViewController  {
             loadItems()
         }
     }
+    
     override func viewDidLoad() {
      super.viewDidLoad()
         
@@ -67,7 +68,7 @@ class ToDoList: UITableViewController  {
             self.itemArray.append(newItem)
             self.saveData()
         }
-       
+
         alert.addTextField { alertTextField in
             alertTextField.placeholder = "create new item"
             textField = alertTextField
@@ -82,7 +83,7 @@ class ToDoList: UITableViewController  {
     }
         
     func loadItems(with request : NSFetchRequest<ToDo> = ToDo.fetchRequest(), predicate: NSPredicate? = nil ){
-        
+      
         let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@" , selectedCategory!.name!)
         
         if let addtionalPredicate = predicate{
@@ -90,8 +91,6 @@ class ToDoList: UITableViewController  {
         }else{
             request.predicate = categoryPredicate
         }
-        
-
         
         do{
             //try to get array of ToDo
